@@ -1,0 +1,97 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <title>Hello44 Login</title> 
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        <meta http-equiv=?Content-Type? content=?text/html; charset=utf-8>
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.3.min.css" />
+        <script src="cordova.js"></script>
+        <script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/jquery.mobile-1.4.3.min.js"></script>
+        <script type="text/javascript">
+
+            /**
+             * Clears all the inputs in the page.
+             */
+            function clearPageInputs() {
+                $("input[type=text]").val('');
+            }
+
+
+            /**
+             * Trim function
+             */
+            String.prototype.trim = function() {
+                a = this.replace(/^\s+/, '');
+                return a.replace(/\s+$/, '');
+            };
+
+            /**
+             * Submits the login form
+             */
+            function sumbitLoginForm(user, pass) {
+                if (user.trim() == '' || pass.trim() == '')
+                {   
+                    alert("fill username and password");
+                }
+                else
+                {
+                    $.ajax({
+						
+                        type: 'post',
+                        url: 'http://api.fd0.co.uk/apisub/call_kapis.php/',
+                        data: {script:"account_api/account",params:{user:user,pass:pass,getinfo:'apiuserpass'}},
+                        dataType: 'json',
+                        success: function(data) {
+					if(data['errors']=='no')
+				{
+                               // perform page transition 
+								alert("login success");
+                               // $.mobile.changePage("menu1.html");
+				}
+				else
+				{
+				                                clearPageInputs()
+                                
+                                alert("wrong username / password");
+}	
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert("Error: " + xhr.status + "\n" +
+                                   "Message: " + xhr.statusText + "\n" +
+                                   "Response: " + xhr.responseText + "\n" + thrownError);
+                        }
+                    });
+                }
+
+                return false;
+            }
+
+            $(document).ready( function() {
+                clearPageInputs();
+
+                $("#submitButton").click(function(){
+                    sumbitLoginForm($("#username").val(), $("#password").val());
+                });
+            });
+        </script>
+    </head>
+    <body> 
+        <div data-role="page"> 
+            <div data-role="header" >
+            <h2>Hello44 Login</h2></div> 
+            <div data-role="content">
+                <form id="loginForm">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" value=""  name="username"/>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" value=""   name="password"/>
+                    <a href="forget.html">Forget Password</a><br>
+                    <a href="index.html" data-role="button" data-transition="turn" data-inline="true" data-icon="back" >Back</a>
+                    <a href="#" id="submitButton" data-role="button" data-inline="true" data-theme="b" data-icon="forward">Submit</a>
+                </form>
+            </div> 
+            <div data-role="footer" data-position="fixed"><h2></h2></div> 
+        </div> 
+    </body>
+</html>
